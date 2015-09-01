@@ -18,8 +18,8 @@ apply plugin: 'org.mikeneck.rule-based-model-generation'
 
 apply from: rootProject.file('jdk7-settings.gradle')
 
-group = 'org.mikeneck.gradle.plugin'
-version = '0.1'
+group = 'org.mikeneck'
+version = '1.0'
 
 repositories {
     mavenCentral()
