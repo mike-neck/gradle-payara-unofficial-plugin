@@ -1,0 +1,20 @@
+# Java Project
+.class
+.jar
+
+# Gradle Project
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Idea Project
+out/
+*.ipr
+*.iml
+*.iws
+
+# Macintosh
+.DS_Store
+
+# vim
+*~

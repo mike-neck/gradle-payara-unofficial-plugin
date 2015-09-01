@@ -1,0 +1,2 @@
+include 'plugin-core'
+rootProject.name = 'gradle-payara-unofficial-plugin'

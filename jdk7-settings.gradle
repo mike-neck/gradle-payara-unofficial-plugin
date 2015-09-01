@@ -1,0 +1,5 @@
+tasks.withType(JavaCompile) {
+    it.sourceCompatibility = jdk7
+    it.targetCompatibility = jdk7
+    it.options.encoding = encoding
+}

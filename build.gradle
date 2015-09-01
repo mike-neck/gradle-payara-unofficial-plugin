@@ -1,0 +1,9 @@
+apply plugin: 'base'
+apply plugin: 'idea'
+
+idea {
+    project {
+        vcs = 'Git'
+        languageLevel = jdk7
+    }
+}

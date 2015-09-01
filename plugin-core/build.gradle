@@ -1,0 +1,48 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+  dependencies {
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.1"
+    }
+}
+
+apply plugin: "com.gradle.plugin-publish"
+
+apply from: rootProject.file('jdk7-settings.gradle')
+
+group = 'org.mikeneck.gradle.plugin'
+version = '0.1'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile "fish.payara.extras:payara-micro:${payaraVersion}"
+    compile gradleApi()
+    testCompile gradleTestKit()
+}
+
+pluginBundle {
+    website = 'https://github.com/mike-neck/gradle-payara-unofficial-plugin'
+    vcsUrl = 'https://github.com/mike-neck/gradle-payara-unofficial-plugin'
+    description = """\
+           |Payara plugin.
+           |
+           |With this plugin you can run JavaEE application on payara-micro.
+           |""".stripMargin()
+    plugins {
+        ruleBaseModelGeneration {
+            id = 'org.mikeneck.payara-plugin'
+            displayName = 'Payara (Unofficial)Plugin'
+            tags = ['payara', 'war', 'JavaEE']
+        }
+    }
+}
