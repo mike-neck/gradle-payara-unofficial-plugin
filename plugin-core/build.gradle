@@ -14,6 +14,7 @@ buildscript {
 }
 
 apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'org.mikeneck.rule-based-model-generation'
 
 apply from: rootProject.file('jdk7-settings.gradle')
 
@@ -29,6 +30,33 @@ dependencies {
     compile "fish.payara.extras:payara-micro:${payaraVersion}"
     compile gradleApi()
     testCompile gradleTestKit()
+}
+
+model {
+    metaModel {
+        srcDir = 'src/main/groovy'
+        packageName = 'org.mikeneck.gradle.plugin.payara.model'
+        classes.create {
+            name = 'PayaraSetting'
+            type = INTERFACE
+            fields.create {
+                name = 'httpPort'
+                type = INTEGER
+            }
+            fields.create {
+                name = 'stopPort'
+                type = INTEGER
+            }
+            fields.create {
+                name = 'stopCommand'
+                type = STRING
+            }
+            fields.create {
+                name = 'daemon'
+                type = BOOLEAN
+            }
+        }
+    }
 }
 
 pluginBundle {

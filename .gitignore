@@ -18,3 +18,6 @@ out/
 
 # vim
 *~
+
+# model-generation-plugin
+**/plugin/payara/model/*
