@@ -7,8 +7,9 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
-  dependencies {
+    dependencies {
         classpath "com.gradle.publish:plugin-publish-plugin:0.9.1"
+        classpath "gradle.plugin.org.mikeneck.gradle.plugin:rule-base-model-generation-plugin:0.3.0"
     }
 }
 
@@ -39,7 +40,7 @@ pluginBundle {
            |With this plugin you can run JavaEE application on payara-micro.
            |""".stripMargin()
     plugins {
-        ruleBaseModelGeneration {
+        payaraUnofficialPlugin {
             id = 'org.mikeneck.payara-plugin'
             displayName = 'Payara (Unofficial)Plugin'
             tags = ['payara', 'war', 'JavaEE']
