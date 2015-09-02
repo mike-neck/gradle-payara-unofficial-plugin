@@ -1,2 +1,2 @@
-include 'plugin-core'
+include 'plugin-core', 'example', 'example:jax-rs'
 rootProject.name = 'gradle-payara-unofficial-plugin'

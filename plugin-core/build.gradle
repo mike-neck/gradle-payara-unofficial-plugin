@@ -19,7 +19,8 @@ apply plugin: 'org.mikeneck.rule-based-model-generation'
 apply from: rootProject.file('jdk7-settings.gradle')
 
 group = 'org.mikeneck'
-version = '1.0'
+version = "0.0.1-${new Date().format('yyyyMMddHHmmss')}"
+archivesBaseName = 'payara-plugin'
 
 repositories {
     mavenCentral()
@@ -66,6 +67,7 @@ pluginBundle {
            |Payara plugin.
            |
            |With this plugin you can run JavaEE application on payara-micro.
+           |Currently unstable release.
            |""".stripMargin()
     plugins {
         payaraUnofficialPlugin {
@@ -73,5 +75,8 @@ pluginBundle {
             displayName = 'Payara (Unofficial)Plugin'
             tags = ['payara', 'war', 'JavaEE']
         }
+    }
+    mavenCoordinates {
+        artifactId = 'payara-plugin'
     }
 }
