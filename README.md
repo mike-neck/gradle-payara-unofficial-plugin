@@ -20,7 +20,7 @@ This plugin is delivered via [Gradle Plugins Portal](https://plugins.gradle.org/
 
 ```groovy
 plugins {
-  id 'org.mikeneck.payara-plugin' version '1.0'
+  id 'org.mikeneck.payara-plugin' version '0.0.1-20150902233610'
 }
 ```
 ##### Old plugin mechanism
@@ -33,7 +33,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.org.mikeneck:payara-plugin:1.0"
+    classpath "gradle.plugin.org.mikeneck:payara-plugin:0.0.1-20150902233610"
   }
 }
 apply plugin: 'org.mikeneck.payara-plugin'
@@ -91,6 +91,7 @@ Currently unsupported
 * deploy multiple wars
 * deploy war file
 * run multiple servers with clustering them
+* auto redeploy war
 
 Customize task
 ===
