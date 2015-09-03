@@ -1,13 +1,5 @@
-apply plugin: 'idea'
-
 tasks.withType(JavaCompile) {
     it.sourceCompatibility = jdk8
     it.targetCompatibility = jdk8
     it.options.encoding = encoding
-}
-
-idea {
-    project {
-        languageLevel = jdk8
-    }
 }

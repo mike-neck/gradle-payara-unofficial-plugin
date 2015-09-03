@@ -10,3 +10,40 @@ buildscript {
 }
 
 apply plugin: 'org.mikeneck.payara-plugin'
+apply plugin: 'idea'
+
+apply from: rootProject.file('jdk8-settings.gradle')
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    providedCompile 'javax:javaee-api:7.0'
+    testCompile 'junit:junit:4.12'
+}
+
+task showConvention {
+    doLast {
+        project.convention.plugins.each {
+            println it
+        }
+    }
+}
+
+war {
+    baseName = 'jax-rs-example'
+}
+
+runWar {
+    httpPort = 8010
+    stopPort = 8080
+    stopCommand = 'STOP'
+    daemon = false
+    war = tasks.war.archivePath
+}
+
+payaraStop {
+    stopPort = 8080
+    stopCommand = 'STOP'
+}
