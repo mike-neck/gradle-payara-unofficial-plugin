@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.1-20150902233610'
+        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.1-20150903224405'
     }
 }
 
@@ -23,19 +23,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-task showConvention {
-    doLast {
-        project.convention.plugins.each {
-            println it
-        }
-    }
-}
-
-war {
-    baseName = 'jax-rs-example'
-}
-
-runWar {
+payaraRunWar {
     httpPort = 8010
     stopPort = 8080
     stopCommand = 'STOP'
