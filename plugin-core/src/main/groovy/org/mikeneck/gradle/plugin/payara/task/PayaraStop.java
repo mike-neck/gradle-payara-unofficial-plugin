@@ -23,7 +23,6 @@ import org.mikeneck.gradle.plugin.payara.server.StopServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -46,11 +45,11 @@ public class PayaraStop extends ConventionTask {
     public void stopPayara() {
         String urlString = String.format("http://localhost:%s/", stopPort);
         HttpURLConnection con = null;
-        BufferedReader reader;
         try {
             URL url = new URL(urlString);
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod(PayaraPlugin.STOP_METHOD);
+            con.setDoOutput(true);
             con.setDoInput(true);
             OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream());
             writer.append(stopCommand).flush();
