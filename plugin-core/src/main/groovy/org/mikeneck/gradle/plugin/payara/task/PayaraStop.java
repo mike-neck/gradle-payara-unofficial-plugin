@@ -59,9 +59,11 @@ public class PayaraStop extends ConventionTask {
                 throw new GradleException("Cannot stop server.");
             }
         } catch (MalformedURLException e) {
+            LOG.info("An exception occurred.", e);
             throw new GradleException(String.format("Invalid stop server url[%s].", urlString));
         } catch (IOException e) {
-            throw new GradleException("An error occurred while connecting to StopServer.");
+            LOG.info("An exception occurred.", e);
+            throw new GradleException("An error occurred while connecting to StopServer.", e);
         } finally {
             if (con != null) {
                 con.disconnect();

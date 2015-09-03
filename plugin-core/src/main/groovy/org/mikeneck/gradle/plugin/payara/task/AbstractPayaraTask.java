@@ -44,18 +44,23 @@ public abstract class AbstractPayaraTask extends ConventionTask {
 
     @TaskAction
     public void runPayara() {
+        Logger logger = getClassLogger();
         verifySetting();
         validateConfiguration();
         // create payara micro server
+        logger.debug("Creating payara-micro server.");
         Runnable payaraServer = createPayaraMicroServer(latch);
         // create stop server
-        try {
-            Runnable stopServer = createStopServer();
+        logger.debug("Creating StopServer.");
+        try (StopServer stopServer = createStopServer()) {
             // acquire ExecutorService
             ExecutorService executors = createExecutors();
             // submit to run payara micro server in ExecutorService
             // submit to run stop server in ExecutorService
+            getLogger().lifecycle("Starting payara-micro server.");
+            logger.debug("Starting payara-micro server.");
             executors.submit(payaraServer);
+            logger.debug("Starting StopServer.");
             executors.submit(stopServer);
 
             // daemon is true -> finish task
@@ -64,11 +69,11 @@ public abstract class AbstractPayaraTask extends ConventionTask {
                 try {
                     Thread.sleep(300l);
                 } catch (InterruptedException e) {
-                    getClassLogger().debug("InterruptedException has occurred.", e);
+                    logger.debug("InterruptedException has occurred.", e);
                 }
             }
-        } catch (IOException e) {
-            getClassLogger().error("An error has occurred while starting StopServer", e);
+        } catch (Exception e) {
+            logger.error("An error has occurred while starting StopServer", e);
             throw new GradleException("Fail to start StopServer", e);
         }
     }

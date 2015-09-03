@@ -39,12 +39,17 @@ public abstract class PayaraMicroServer implements Runnable {
 
     @Override
     public void run() {
+        LOG.debug("Creating payara-micro instance.");
         PayaraMicro payaraMicro = createPayaraMicro();
         try {
+            LOG.debug("Starting payara-micro.");
             PayaraMicroRuntime runtime = payaraMicro.bootStrap();
+            LOG.info("Payara-micro server is now running.");
             latch.await();
             try {
+                LOG.debug("Shutting down payara-micro server.");
                 runtime.shutdown();
+                LOG.info("Payara-micro server is shut down.");
             } catch (BootstrapException e) {
                 LOG.warn("Error has occurred while shutdown payara-micro server.", e);
                 throw new GradleException("Fail to shutdown payara-micro server.", e);
