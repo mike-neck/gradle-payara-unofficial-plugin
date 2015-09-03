@@ -26,7 +26,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class PayaraRunWar extends AbstractPayaraTask {
 
-    public static final String TASK_NAME = "runWar";
+    public static final String TASK_NAME = "payaraRunWar";
 
     public static final String DESCRIPTION = "Assembles the JavaEE app into a war and deploys it to payara-micro.";
 
