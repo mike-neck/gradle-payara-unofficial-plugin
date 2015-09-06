@@ -21,3 +21,6 @@ out/
 
 # model-generation-plugin
 **/plugin/payara/model/*
+
+# derby log
+derby.log

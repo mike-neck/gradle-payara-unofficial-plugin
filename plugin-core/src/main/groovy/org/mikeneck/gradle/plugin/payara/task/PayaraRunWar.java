@@ -15,14 +15,12 @@
  */
 package org.mikeneck.gradle.plugin.payara.task;
 
-import fish.payara.micro.PayaraMicro;
 import org.gradle.api.InvalidUserDataException;
-import org.mikeneck.gradle.plugin.payara.server.PayaraMicroServer;
+import org.mikeneck.gradle.plugin.payara.micro.AlternativePayaraMicro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.concurrent.CountDownLatch;
 
 public class PayaraRunWar extends AbstractPayaraTask {
 
@@ -47,15 +45,8 @@ public class PayaraRunWar extends AbstractPayaraTask {
     }
 
     @Override
-    protected PayaraMicroServer createPayaraMicroServer(CountDownLatch latch) {
-        return new PayaraMicroServer(getHttpPort(), latch) {
-            @Override
-            protected PayaraMicro createPayaraMicro() {
-                return PayaraMicro.getInstance()
-                        .setHttpPort(getHttpPort())
-                        .addDeployment(war.getAbsolutePath());
-            }
-        };
+    protected void mutateServer(AlternativePayaraMicro payaraMicro) {
+        payaraMicro.addDeployment(war.getAbsolutePath());
     }
 
     public File getWar() {

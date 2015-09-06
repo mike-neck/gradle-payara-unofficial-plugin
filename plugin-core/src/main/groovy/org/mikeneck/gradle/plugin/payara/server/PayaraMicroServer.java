@@ -16,9 +16,9 @@
 package org.mikeneck.gradle.plugin.payara.server;
 
 import fish.payara.micro.BootstrapException;
-import fish.payara.micro.PayaraMicro;
 import fish.payara.micro.PayaraMicroRuntime;
 import org.gradle.api.GradleException;
+import org.mikeneck.gradle.plugin.payara.micro.AlternativePayaraMicro;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,19 +28,16 @@ public abstract class PayaraMicroServer implements Runnable {
 
     protected static final Logger LOG = LoggerFactory.getLogger(PayaraMicroServer.class);
 
-    private final Integer httpPort;
-
     private final CountDownLatch latch;
 
-    protected PayaraMicroServer(Integer httpPort, CountDownLatch latch) {
-        this.httpPort = httpPort;
+    public PayaraMicroServer(CountDownLatch latch) {
         this.latch = latch;
     }
 
     @Override
     public void run() {
         LOG.debug("Creating payara-micro instance.");
-        PayaraMicro payaraMicro = createPayaraMicro();
+        AlternativePayaraMicro payaraMicro = createPayaraMicro();
         try {
             LOG.debug("Starting payara-micro.");
             PayaraMicroRuntime runtime = payaraMicro.bootStrap();
@@ -62,9 +59,5 @@ public abstract class PayaraMicroServer implements Runnable {
         }
     }
 
-    protected abstract PayaraMicro createPayaraMicro();
-
-    public Integer getHttpPort() {
-        return httpPort;
-    }
+    protected abstract AlternativePayaraMicro createPayaraMicro();
 }

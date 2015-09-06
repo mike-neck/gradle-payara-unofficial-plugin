@@ -19,7 +19,7 @@ apply plugin: 'org.mikeneck.rule-based-model-generation'
 apply from: rootProject.file('jdk7-settings.gradle')
 
 group = 'org.mikeneck'
-version = "0.0.1-${new Date().format('yyyyMMddHHmmss')}"
+version = "0.0.1"
 archivesBaseName = 'payara-plugin'
 
 repositories {

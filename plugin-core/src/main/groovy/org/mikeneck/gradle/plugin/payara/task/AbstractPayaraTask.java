@@ -20,10 +20,12 @@ import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.internal.ConventionTask;
 import org.gradle.api.tasks.TaskAction;
 import org.mikeneck.gradle.plugin.payara.PayaraPlugin;
+import org.mikeneck.gradle.plugin.payara.micro.AlternativePayaraMicro;
 import org.mikeneck.gradle.plugin.payara.server.PayaraMicroServer;
 import org.mikeneck.gradle.plugin.payara.server.StopServer;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -117,7 +119,21 @@ public abstract class AbstractPayaraTask extends ConventionTask {
 
     protected abstract void validateConfiguration();
 
-    protected abstract PayaraMicroServer createPayaraMicroServer(CountDownLatch latch);
+    protected PayaraMicroServer createPayaraMicroServer(CountDownLatch latch) {
+        final File rootDir = getTemporaryDir();
+        return new PayaraMicroServer(latch) {
+            @Override
+            protected AlternativePayaraMicro createPayaraMicro() {
+                AlternativePayaraMicro payaraMicro = AlternativePayaraMicro.getInstance()
+                        .setRootDir(rootDir)
+                        .setHttpPort(httpPort);
+                mutateServer(payaraMicro);
+                return payaraMicro;
+            }
+        };
+    }
+
+    protected abstract void mutateServer(AlternativePayaraMicro payaraMicro);
 
     protected StopServer createStopServer() throws IOException {
         return new StopServer(stopPort, stopCommand, latch);

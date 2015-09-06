@@ -20,7 +20,7 @@ This plugin is delivered via [Gradle Plugins Portal](https://plugins.gradle.org/
 
 ```groovy
 plugins {
-  id 'org.mikeneck.payara-plugin' version '0.0.1-20150902233610'
+  id 'org.mikeneck.payara-plugin' version '0.0.1'
 }
 ```
 ##### Old plugin mechanism
@@ -33,7 +33,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.org.mikeneck:payara-plugin:0.0.1-20150902233610"
+    classpath "gradle.plugin.org.mikeneck:payara-plugin:0.0.1"
   }
 }
 apply plugin: 'org.mikeneck.payara-plugin'
@@ -41,6 +41,8 @@ apply plugin: 'org.mikeneck.payara-plugin'
 
 Settings
 ===
+
+**NOTE** These configuration is currently unavailable. Please use `payaraRunWar{}` block and `payaraStop{}` block instead. The next version will fix these inconvenience. 
 
 You can configure these values via `payara{}` block.
 
@@ -59,6 +61,28 @@ payara {
   daemon = true
 }
 ```
+
+#### Configuring payaraRunWar
+
+```groovy
+payaraRunWar {
+  httpPort = 8000
+  stopPort = 3000
+  stopCommand = 'STOP'
+  daemon = false
+}
+```
+
+#### Configuring payaraStop
+
+```groovy
+payaraStop {
+  stopPort = 3000       // the same port as payaraRunWar.stopPort
+  stopCommand = 'STOP'  // the same command as payaraRunWar.stopCommand
+}
+```
+
+The next version will fix these inconvenience.
 
 Use case
 ===
@@ -87,6 +111,7 @@ Features
 Currently unsupported
 ===
 
+* **daemon mode is currently unavailable.**(i.e. `payaraRunWar` task will block the build and tests is not available in the same build.)
 * deploy classes
 * deploy multiple wars
 * deploy war file
