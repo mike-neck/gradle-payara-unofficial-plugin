@@ -18,16 +18,15 @@ package org.mikeneck.gradle.plugin.payara;
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.plugins.Convention;
 import org.gradle.api.plugins.WarPlugin;
+import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.bundling.War;
 import org.mikeneck.gradle.plugin.payara.model.PayaraSetting;
 import org.mikeneck.gradle.plugin.payara.model.PayaraSettingPojo;
-import org.mikeneck.gradle.plugin.payara.task.AbstractPayaraTask;
 import org.mikeneck.gradle.plugin.payara.task.PayaraRunWar;
 import org.mikeneck.gradle.plugin.payara.task.PayaraStop;
 
-import java.util.concurrent.Callable;
+import java.io.File;
 
 public class PayaraPlugin implements Plugin<Project> {
 
@@ -43,14 +42,6 @@ public class PayaraPlugin implements Plugin<Project> {
 
     public static final String STOP_METHOD = "POST";
 
-    public static final String HTTP_PORT = "httpPort";
-
-    public static final String STOP_PORT = "stopPort";
-
-    public static final String STOP_COMMAND = "stopCommand";
-
-    public static final String DAEMON = "daemon";
-
     /**
      * minimum port number(included)
      */
@@ -64,84 +55,51 @@ public class PayaraPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPluginManager().apply(WarPlugin.class);
-        PayaraSetting setting = new PayaraSettingPojo(DEFAULT_HTTP_PORT, DEFAULT_STOP_PORT, DEFAULT_STOP_COMMAND, DEFAULT_DAEMON);
-        Convention convention = project.getConvention();
-        convention.getPlugins().put(PAYARA_CONVENTION, setting);
+        final PayaraSetting setting = project.getExtensions()
+                .create(PAYARA_CONVENTION,
+                        PayaraSettingPojo.class,
+                        DEFAULT_HTTP_PORT,
+                        DEFAULT_STOP_PORT,
+                        DEFAULT_STOP_COMMAND,
+                        DEFAULT_DAEMON);
 
-        configureMappingRules(project, setting);
-        configurePayaraRunWar(project, setting);
-        configurePayaraStop(project, setting);
-    }
-
-    private static void configureMappingRules(final Project project, final PayaraSetting setting) {
-        project.getTasks().withType(AbstractPayaraTask.class, new Action<AbstractPayaraTask>() {
+        final PayaraRunWar runWar = createPayaraRunWarTask(project.getTasks());
+        final PayaraStop stopTask = createPayaraStopTask(project.getTasks());
+        project.afterEvaluate(new Action<Project>() {
             @Override
-            public void execute(AbstractPayaraTask task) {
-                configurePayara(setting, task);
-            }
-        });
-    }
-
-    private static void configurePayara(final PayaraSetting setting, final AbstractPayaraTask task) {
-        task.getConventionMapping().map(HTTP_PORT, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getHttpPort();
-            }
-        });
-        task.getConventionMapping().map(STOP_PORT, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getStopPort();
-            }
-        });
-        task.getConventionMapping().map(STOP_COMMAND, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getStopCommand();
-            }
-        });
-        task.getConventionMapping().map(DAEMON, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getDaemon();
+            public void execute(Project prj) {
+                configurePayaraRunWar(prj, runWar, setting);
+                configurePayaraStop(stopTask, setting);
             }
         });
     }
 
-    private static void configurePayaraRunWar(final Project project, final PayaraSetting setting) {
-        project.getTasks().withType(PayaraRunWar.class, new Action<PayaraRunWar>() {
-            @Override
-            public void execute(PayaraRunWar task) {
-                task.dependsOn(WarPlugin.WAR_TASK_NAME);
-                task.getConventionMapping().map("war", new Callable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        return ((War) project.getTasks().getByName(WarPlugin.WAR_TASK_NAME)).getArchivePath();
-                    }
-                });
-            }
-        });
-        PayaraRunWar task = project.getTasks().create(PayaraRunWar.TASK_NAME, PayaraRunWar.class);
+    private static PayaraRunWar createPayaraRunWarTask(TaskContainer tasks) {
+        PayaraRunWar task = tasks.create(PayaraRunWar.TASK_NAME, PayaraRunWar.class);
         task.setGroup(WarPlugin.WEB_APP_GROUP);
+        task.dependsOn(WarPlugin.WAR_TASK_NAME);
         task.setDescription(PayaraRunWar.DESCRIPTION);
+        return task;
     }
 
-    private static void configurePayaraStop(final Project project, final PayaraSetting setting) {
-        PayaraStop task = project.getTasks().create(PayaraStop.TASK_NAME, PayaraStop.class);
-        task.getConventionMapping().map(STOP_PORT, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getStopPort();
-            }
-        });
-        task.getConventionMapping().map(STOP_COMMAND, new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                return setting.getStopCommand();
-            }
-        });
+    private static PayaraStop createPayaraStopTask(TaskContainer tasks) {
+        PayaraStop task = tasks.create(PayaraStop.TASK_NAME, PayaraStop.class);
         task.setGroup(WarPlugin.WEB_APP_GROUP);
         task.setDescription(PayaraStop.DESCRIPTION);
+        return task;
+    }
+
+    private void configurePayaraStop(PayaraStop stopTask, PayaraSetting setting) {
+        stopTask.setStopPort(setting.getStopPort());
+        stopTask.setStopCommand(setting.getStopCommand());
+    }
+
+    private void configurePayaraRunWar(Project prj, PayaraRunWar runWar, PayaraSetting setting) {
+        runWar.setHttpPort(setting.getHttpPort());
+        runWar.setStopPort(setting.getStopPort());
+        runWar.setStopCommand(setting.getStopCommand());
+        runWar.setDaemon(setting.getDaemon());
+        File archivePath = ((War) prj.getTasks().getByName(WarPlugin.WAR_TASK_NAME)).getArchivePath();
+        runWar.setWar(archivePath);
     }
 }

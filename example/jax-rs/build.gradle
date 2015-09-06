@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.1'
+        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.2'
     }
 }
 
@@ -23,15 +23,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-payaraRunWar {
+payara {
     httpPort = 8010
     stopPort = 8080
     stopCommand = 'STOP'
     daemon = false
-    war = tasks.war.archivePath
-}
-
-payaraStop {
-    stopPort = 8080
-    stopCommand = 'STOP'
 }
