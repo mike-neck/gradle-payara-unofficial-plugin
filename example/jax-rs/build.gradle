@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.1-20150903224405'
+        classpath 'gradle.plugin.org.mikeneck:payara-plugin:0.0.1'
     }
 }
 
