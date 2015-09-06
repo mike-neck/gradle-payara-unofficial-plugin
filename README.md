@@ -59,6 +59,7 @@ payara {
   stopPort = 5000
   stopCommand = 'shutdown'
   daemon = true
+  war = tasks.war.archivePath
 }
 ```
 
